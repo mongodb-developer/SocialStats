@@ -1,0 +1,6 @@
+{
+    "name": "uploadTweets",
+    "type": "http",
+    "config": {},
+    "version": 1
+}

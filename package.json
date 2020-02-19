@@ -1,0 +1,31 @@
+{
+  "name": "socialstats",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "env-cmd -f ./config/test.env jest --watch --runInBand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mongodb-developer/SocialStats.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mongodb-developer/SocialStats/issues"
+  },
+  "homepage": "https://github.com/mongodb-developer/SocialStats#readme",
+  "dependencies": {
+    "comma-separated-values": "^3.6.4",
+    "parse-multipart": "^1.0.4",
+    "selenium-webdriver": "^4.0.0-alpha.7"
+  },
+  "devDependencies": {
+    "chromedriver": "^2.12.0",
+    "env-cmd": "^10.1.0",
+    "jest": "^25.1.0",
+    "jest-cli": "^25.1.0",
+    "mongodb-stitch-browser-sdk": "^4.8.0"
+  }
+}
