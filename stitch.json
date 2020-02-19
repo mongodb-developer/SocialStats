@@ -1,0 +1,10 @@
+{
+    "config_version": 20180301,
+    "security": {},
+    "custom_user_data_config": {
+        "enabled": false
+    },
+    "realm_config": {
+        "development_mode_enabled": false
+    }
+}

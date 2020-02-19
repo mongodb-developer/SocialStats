@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <p>Click on the "Choose File" button to upload a file:</p>
+
+    <form
+        action="https://webhooks.mongodb-stitch.com/api/client/v2.0/app/twitterstats-vpxim/service/uploadTweets/incoming_webhook/sendCsv"
+        method="post" enctype="multipart/form-data" name="myform">
+        <input type="file" name="Tweetcsv">
+        <input type="submit" value="send">
+    </form>
+
+</body>
+
+</html>
