@@ -1,0 +1,12 @@
+dist: trusty
+language: node_js
+node_js:
+- '12'
+addons:
+  chrome: stable
+before_script:
+- java -jar tests/ui/selenium-server-standalone-3.141.59.jar &
+script:
+- npm install
+- CHROMEDRIVER_VERSION=LATEST npm install chromedriver
+- ./node_modules/.bin/jest --runInBand

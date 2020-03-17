@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-const { Builder, By, Key, until } = require('selenium-webdriver');
+const { Builder, By, until, Capabilities } = require('selenium-webdriver');
 
 const { TwitterStatsDb, statsCollection } = require('../constants.js');
 
@@ -9,7 +9,6 @@ let mongoClient;
 let driver;
 
 beforeAll(async () => {
-
    jest.setTimeout(30000);
 
    // Connect directly to the database
@@ -23,14 +22,21 @@ beforeEach(async () => {
    // Clear the database
    await collection.deleteMany({});
 
+   // Create a new driver using headless Chrome
+   let chromeCapabilities = Capabilities.chrome();
+   var chromeOptions = {
+      'args': ['--headless']
+   };
+   chromeCapabilities.set('chromeOptions', chromeOptions);
    driver = new Builder()
       .forBrowser('chrome')
       .usingServer('http://localhost:4444/wd/hub')
+      .withCapabilities(chromeCapabilities)
       .build();
 });
 
 afterEach(async () => {
-   driver.quit()
+   driver.close()
 })
 
 afterAll(async () => {
@@ -38,29 +44,24 @@ afterAll(async () => {
 })
 
 test('Single tweet', async () => {
-
    await driver.get(`${process.env.URL}/upload.html`);
    const button = await driver.findElement(By.id('csvUpload'));
-   await button.sendKeys("/Users/lauren/Documents/git/SocialStats/tests/ui/files/singletweet.csv");
+   await button.sendKeys(process.cwd() + "/tests/ui/files/singletweet.csv");
 
    const results = await driver.findElement(By.id('results'));
    await driver.wait(until.elementTextIs(results, `Success! 1 new Tweet(s) was/were saved.`), 10000);
-
 })
 
 test('New, updates, and multiple authors', async () => {
    await driver.get(`${process.env.URL}/upload.html`);
 
    const button = await driver.findElement(By.id('csvUpload'));
-   await button.sendKeys("/Users/lauren/Documents/git/SocialStats/tests/ui/files/twotweets.csv");
+   await button.sendKeys(process.cwd() + "/tests/ui/files/twotweets.csv");
 
    const results = await driver.findElement(By.id('results'));
    await driver.wait(until.elementTextIs(results, `Success! 2 new Tweet(s) was/were saved.`), 10000);
 
-   await button.sendKeys("/Users/lauren/Documents/git/SocialStats/tests/ui/files/twotweets_updated.csv");
+   await button.sendKeys(process.cwd() + "/tests/ui/files/twotweets_updated.csv");
    await driver.wait(until.elementTextIs(results, `Success! 3 new Tweet(s) was/were saved. 2 Tweet(s) was/were updated.`), 10000);
 
 })
-
-
-
