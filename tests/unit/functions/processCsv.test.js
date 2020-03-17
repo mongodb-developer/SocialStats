@@ -1,4 +1,4 @@
-const processCsv = require('../../functions/processCsv/source.js');
+const processCsv = require('../../../functions/processCsv/source.js');
 
 beforeEach(() => {
 

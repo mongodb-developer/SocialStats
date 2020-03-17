@@ -1,4 +1,4 @@
-const uploadTweets = require('../../services/uploadTweets/incoming_webhooks/webhook0/source.js');
+const uploadTweets = require('../../../services/uploadTweets/incoming_webhooks/webhook0/source.js');
 
 const mockTweetResults = {
     newTweets: ["1226928883355791361"],

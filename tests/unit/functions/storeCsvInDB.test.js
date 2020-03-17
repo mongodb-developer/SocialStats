@@ -1,4 +1,4 @@
-const storeCsvInDb = require('../../functions/storeCsvInDb/source.js');
+const storeCsvInDb = require('../../../functions/storeCsvInDb/source.js');
 
 // TODO: refactor these to use constants.js
 const header = `"Tweet id","Tweet permalink","Tweet text","time","impressions","engagements","engagement rate","retweets","replies","likes","user profile clicks","url clicks","hashtag clicks","detail expands","permalink clicks","app opens","app installs","follows","email tweet","dial phone","media views","media engagements","promoted impressions","promoted engagements","promoted engagement rate","promoted retweets","promoted replies","promoted likes","promoted user profile clicks","promoted url clicks","promoted hashtag clicks","promoted detail expands","promoted permalink clicks","promoted app opens","promoted app installs","promoted follows","promoted email tweet","promoted dial phone","promoted media views","promoted media engagements"`;
