@@ -1,6 +1,6 @@
 # SocialStats
 
-This project is still very much a work in progress.  I will update the readme as the project develops.
+This project is a work in progress.  I will update the readme as the project develops.
 
 ## Project Goals
 
