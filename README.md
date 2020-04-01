@@ -53,4 +53,6 @@ The tests are built using [Jest](https://jestjs.io/) and [Selenium](https://www.
 
 The tests currently test uploading a CSV file that contains stats about Tweets.  The CSV files are stored in [tests/ui/files](/tests/ui/files).
 
+## About the Builds
 
+This project using Travis CI for continuous integration/continuous deployment.  You can view the builds at https://travis-ci.org/github/mongodb-developer/SocialStats.
