@@ -18,9 +18,10 @@
 </body>
 
 <script src="https://s3.amazonaws.com/stitch-sdks/js/bundles/4.6.0/stitch.js"></script>
-
+<script src="./config/stitch.js"></script>
 <script>
-    const client = stitch.Stitch.initializeDefaultAppClient('twitterstats-vpxim');
+
+    const client = stitch.Stitch.initializeDefaultAppClient(STITCH_APP_ID);
 
     function convertToBase64(file) {
         return new Promise((resolve, reject) => {
