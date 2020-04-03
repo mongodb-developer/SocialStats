@@ -10,3 +10,6 @@ script:
 - npm install
 - CHROMEDRIVER_VERSION=LATEST npm install chromedriver
 - ./node_modules/.bin/jest --runInBand
+after_success:
+  - test $TRAVIS_REPO_SLUG = "mongodb-developer/SocialStats-Staging" &&
+    git push https://${GITHUB_TOKEN}@github.com/mongodb-developer/SocialStats.git
