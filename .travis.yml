@@ -20,5 +20,6 @@ script:
 after_success:
 # If the tests pass on Staging, push the commits to Production
 - if [ $TRAVIS_REPO_SLUG == "mongodb-developer/SocialStats-Staging" ] ; then
+    git checkout master;
     git push https://${GITHUB_TOKEN}@github.com/mongodb-developer/SocialStats.git;
   fi
