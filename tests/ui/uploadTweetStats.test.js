@@ -25,7 +25,7 @@ beforeEach(async () => {
    // Create a new driver using headless Chrome
    let chromeCapabilities = Capabilities.chrome();
    var chromeOptions = {
-      'args': ['--headless']
+      'args': ['--headless', 'window-size=1920,1080']
    };
    chromeCapabilities.set('chromeOptions', chromeOptions);
    driver = new Builder()
@@ -36,7 +36,7 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-   driver.close()
+   driver.close();
 })
 
 afterAll(async () => {
@@ -44,16 +44,35 @@ afterAll(async () => {
 })
 
 test('Single tweet', async () => {
-   await driver.get(`${process.env.URL}/upload.html`);
+   await driver.get(`${process.env.URL}`);
    const button = await driver.findElement(By.id('csvUpload'));
    await button.sendKeys(process.cwd() + "/tests/ui/files/singletweet.csv");
 
    const results = await driver.findElement(By.id('results'));
    await driver.wait(until.elementTextIs(results, `Success! 1 new Tweet(s) was/were saved.`), 10000);
+
+   const dashboardLink = await driver.findElement(By.id('dashboard-link'));
+   dashboardLink.click();
+
+   // Hacking this a bit since we can't access the numbers in the chart itself.
+   // Instead we'll hover over the chart and pull the values out of the tooltip.
+
+   await driver.wait(until.elementLocated(By.xpath("//*[text()='Total Engagements']")));
+   const totalEngagements = await driver.findElement(By.xpath("//*[text()='Total Engagements']/parent::*//canvas"));
+
+   await driver.wait(until.elementLocated(By.xpath("//*[text()='Total Impressions']")));
+   const totalImpressions = await driver.findElement(By.xpath("//*[text()='Total Impressions']/parent::*//canvas"));
+
+   const actions = driver.actions();
+   await actions.move({ origin: totalEngagements }).perform();
+   await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='4']")));
+
+   await actions.move({ origin: totalImpressions }).perform();
+   await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='260']")));
 })
 
 test('New, updates, and multiple authors', async () => {
-   await driver.get(`${process.env.URL}/upload.html`);
+   await driver.get(`${process.env.URL}`);
 
    const button = await driver.findElement(By.id('csvUpload'));
    await button.sendKeys(process.cwd() + "/tests/ui/files/twotweets.csv");
@@ -64,4 +83,24 @@ test('New, updates, and multiple authors', async () => {
    await button.sendKeys(process.cwd() + "/tests/ui/files/twotweets_updated.csv");
    await driver.wait(until.elementTextIs(results, `Success! 3 new Tweet(s) was/were saved. 2 Tweet(s) was/were updated.`), 10000);
 
+   const dashboardLink = await driver.findElement(By.id('dashboard-link'));
+   dashboardLink.click();
+
+   // Hacking this a bit since we can't access the numbers in the chart itself.
+   // Instead we'll hover over the chart and pull the values out of the tooltip.
+
+
+   //TODO: store these xpaths as consts in the file to reduce duplication
+   await driver.wait(until.elementLocated(By.xpath("//*[text()='Total Engagements']")));
+   const totalEngagements = await driver.findElement(By.xpath("//*[text()='Total Engagements']/parent::*//canvas"));
+
+   await driver.wait(until.elementLocated(By.xpath("//*[text()='Total Impressions']")));
+   const totalImpressions = await driver.findElement(By.xpath("//*[text()='Total Impressions']/parent::*//canvas"));
+
+   const actions = driver.actions();
+   await actions.move({ origin: totalEngagements }).perform();
+   await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='23']")));
+
+   await actions.move({ origin: totalImpressions }).perform();
+   await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='1,323']")));
 })
