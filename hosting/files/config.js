@@ -11,7 +11,7 @@ const CHARTS_URL = getChartsUrl(STITCH_APP_ID);
 
 function getChartsUrl(STITCH_APP_ID) {
    switch (STITCH_APP_ID) {
-      case "twitter-stats-vzwpx":
+      case "twitterstats-vpxim":
          return "https://charts.mongodb.com/charts-twitter-stats-vzwpx/public/dashboards/82195382-6cea-4994-9283-cf2fb899c6de";
       case "socialstats-staging-pseyi":
          return "https://charts.mongodb.com/charts-socialstats-staging-vkoue/public/dashboards/852be5c1-3476-44b8-9d6f-74bcda18bd03";
