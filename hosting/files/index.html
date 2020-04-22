@@ -64,7 +64,7 @@
 
     let resultsToPrint = "";
     if (result.tweetsNotInsertedOrUpdated.length > 0) {
-      resultsToPrint = `Error: ${tweetsNotInsertedOrUpdated.length} Tweet(s) could not be inserted or updated\n`;
+      resultsToPrint += `${result.tweetsNotInsertedOrUpdated.length} Tweet(s) were not inserted or updated.\n`;
     }
     if (result.newTweets.length > 0 || result.updatedTweets.length > 0) {
       resultsToPrint += "Success! ";
