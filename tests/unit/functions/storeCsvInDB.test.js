@@ -6,17 +6,19 @@ const validTweet = `"1226928883355791360","https://twitter.com/Lauren_Schaefer/s
 const validTweet2 = `"1226928883355791361","https://twitter.com/Lauren_Schaefer/status/1226928883355791361","Another tweet from me <3","2020-02-11 18:00 +0000","1203.0","39.0","0.032418952618453865","4.0","0.0","7.0","2.0","22.0","0.0","4.0","0.0","0","0","0","0","0","0","0","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-"`;
 const validTweetKen = `"1226928883355791362","https://twitter.com/kenwalger/status/1226928883355791362","I like to make bad dad jokes","2020-02-12 18:00 +0000","1203.0","39.0","0.032418952618453865","4.0","0.0","7.0","2.0","22.0","0.0","4.0","0.0","0","0","0","0","0","0","0","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-"`;
 
+let updateOne;
+
 beforeEach(() => {
-    // TODO: Sanity check this with someone else
     // Mock functions to support context.services.get().db().collection().updateOne()
     updateOne = jest.fn(() => {
         return result = {
             upsertedId: "1226928883355791360"
         }
     });
-    collection = jest.fn(() => { return { updateOne } });
-    db = jest.fn(() => { return { collection }; });
-    get = jest.fn(() => { return { db } });
+
+    const collection = jest.fn().mockReturnValue({ updateOne });
+    const db = jest.fn().mockReturnValue({ collection });
+    const get = jest.fn().mockReturnValue({ db });
 
     collection.updateOne = updateOne;
     db.collection = collection;
