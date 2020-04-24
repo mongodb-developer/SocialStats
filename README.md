@@ -1,6 +1,6 @@
 # SocialStats
 
-This project is a work in progress.  I will update the readme as the project develops.
+This app allows you to track team stats for social media.
 
 ## Project Goals
 
@@ -9,11 +9,12 @@ This project is a work in progress.  I will update the readme as the project dev
 
 ## About the Architecture
 
-The app is built using a serverless architecture using MongoDB Stitch.  The app consists of serverless functions, a webhook, and static pages.
+The app is built using a serverless architecture using MongoDB Stitch.  The app consists of serverless functions, static web pages, and 
+a dashboard built in MongoDB Charts.
 
-### config directory
+### Configuring the App
 
-Details coming soon.
+Coming soon.
 
 ## Automated Tests
 
@@ -29,7 +30,7 @@ To execute all of the tests locally, you will need to do the following:
     - CLUSTER_URI: the URI for your MongoDB cluster.  For example:  cluster0-jhus0.mongodb.net
     - STITCH_APP_ID: the ID of the Stitch app you are using for development and testing. For example:  twitterstats-vpxim
     - URL: the URL for your Stitch app.  For example:  https://twitterstats-vpxim.mongodbstitch.com
-1. Run `npm run start` to run the tests using the watch option (run tests that have been recently updated). Run `env-cmd -f ./config/test.env jest --runInBand` to run all of the tests.
+1. Run `npm run start` to run the tests using the watch option (run tests that have been recently updated). Run `env-cmd -f ./config/test.env jest --runInBand` to run all of the tests. Run `env-cmd -f ./config/test.env jest /tests/unit --runInBand` to run just the unit tests.
 
 Many of the tests utilize constants from [constants.js](/tests/constants.js).
 
