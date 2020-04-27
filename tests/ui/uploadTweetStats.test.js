@@ -8,6 +8,9 @@ let collection;
 let mongoClient;
 let driver;
 
+const totalEngagementsXpath = "//*[text()='Total Engagements']";
+const totalImpressionsXpath = "//*[text()='Total Impressions']";
+
 beforeAll(async () => {
    jest.setTimeout(30000);
 
@@ -57,17 +60,10 @@ test('Single tweet', async () => {
    // Hacking this a bit since we can't access the numbers in the chart itself.
    // Instead we'll hover over the chart and pull the values out of the tooltip.
 
-   await driver.wait(until.elementLocated(By.xpath("//*[text()='Total Engagements']")));
-   const totalEngagements = await driver.findElement(By.xpath("//*[text()='Total Engagements']/parent::*//canvas"));
-
-   await driver.wait(until.elementLocated(By.xpath("//*[text()='Total Impressions']")));
-   const totalImpressions = await driver.findElement(By.xpath("//*[text()='Total Impressions']/parent::*//canvas"));
-
-   const actions = driver.actions();
-   await actions.move({ origin: totalEngagements }).perform();
+   await moveToCanvasOfElement(totalEngagementsXpath);
    await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='4']")));
 
-   await actions.move({ origin: totalImpressions }).perform();
+   await moveToCanvasOfElement(totalImpressionsXpath);
    await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='260']")));
 })
 
@@ -89,18 +85,29 @@ test('New, updates, and multiple authors', async () => {
    // Hacking this a bit since we can't access the numbers in the chart itself.
    // Instead we'll hover over the chart and pull the values out of the tooltip.
 
-
-   //TODO: store these xpaths as consts in the file to reduce duplication
-   await driver.wait(until.elementLocated(By.xpath("//*[text()='Total Engagements']")));
-   const totalEngagements = await driver.findElement(By.xpath("//*[text()='Total Engagements']/parent::*//canvas"));
-
-   await driver.wait(until.elementLocated(By.xpath("//*[text()='Total Impressions']")));
-   const totalImpressions = await driver.findElement(By.xpath("//*[text()='Total Impressions']/parent::*//canvas"));
-
-   const actions = driver.actions();
-   await actions.move({ origin: totalEngagements }).perform();
+   await moveToCanvasOfElement(totalEngagementsXpath);
    await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='23']")));
 
-   await actions.move({ origin: totalImpressions }).perform();
+   await moveToCanvasOfElement(totalImpressionsXpath);
    await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='1,323']")));
 })
+
+async function moveToCanvasOfElement(elementXPath) {
+   let i = 0;
+   // Getting sporadic StaleElementReferenceErrors as the elements briefly disappear after loading
+   // so we'll try 5 times in order to get around the sporadic failures
+   while (i < 5) {
+      try {
+         await driver.wait(until.elementLocated(By.xpath(elementXPath)));
+         const canvas = await driver.findElement(By.xpath(elementXPath + "/parent::*//canvas"));
+         const actions = driver.actions();
+         await actions.move({ origin: canvas }).perform();
+         break;
+      } catch (e) {
+         if (i == 4) {
+            throw e;
+         }
+      }
+      i++;
+   }
+}
