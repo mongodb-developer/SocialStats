@@ -49,7 +49,7 @@ test('Single tweet', async () => {
    await button.sendKeys(process.cwd() + "/tests/ui/files/singletweet.csv");
 
    const results = await driver.findElement(By.id('results'));
-   await driver.wait(until.elementTextIs(results, `Fabulous! 1 new Tweet(s) was/were saved.`), 10000);
+   await driver.wait(until.elementTextIs(results, `Success! 1 new Tweet(s) was/were saved.`), 10000);
 
    const dashboardLink = await driver.findElement(By.id('dashboard-link'));
    dashboardLink.click();
@@ -78,10 +78,10 @@ test('New, updates, and multiple authors', async () => {
    await button.sendKeys(process.cwd() + "/tests/ui/files/twotweets.csv");
 
    const results = await driver.findElement(By.id('results'));
-   await driver.wait(until.elementTextIs(results, `Fabulous! 2 new Tweet(s) was/were saved.`), 10000);
+   await driver.wait(until.elementTextIs(results, `Success! 2 new Tweet(s) was/were saved.`), 10000);
 
    await button.sendKeys(process.cwd() + "/tests/ui/files/twotweets_updated.csv");
-   await driver.wait(until.elementTextIs(results, `Fabulous! 3 new Tweet(s) was/were saved. 2 Tweet(s) was/were updated.`), 10000);
+   await driver.wait(until.elementTextIs(results, `Success! 3 new Tweet(s) was/were saved. 2 Tweet(s) was/were updated.`), 10000);
 
    const dashboardLink = await driver.findElement(By.id('dashboard-link'));
    dashboardLink.click();
