@@ -221,6 +221,7 @@ Then complete the steps described above in [Steps for All Stages](#steps-for-all
    1. Create a new git repo for your staging application. 
    1. Since you can't create a fork of an app in the same organization, we will mirror it instead.  Create a local copy of the prod version of the repo.  Then run the following command: 
    `git push --mirror https://github.com/YourOrg/YourStagingRepo.git`
+   1. Clone the repo so you can access the repo locally.
    1. Then add a remote for prod:
     `git remote add prod https://github.com/mongodb-developer/SocialStats.git`
    1. Now you can push changes to staging.  You can also push changes to prod.

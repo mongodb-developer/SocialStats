@@ -1,4 +1,6 @@
 exports = async function (csvTweets) {
+  var d = new Date();
+  console.log("Entering storeCsvInDb at " + d);
 
   const CSV = require("comma-separated-values");
 
@@ -7,7 +9,13 @@ exports = async function (csvTweets) {
   csvTweets = context.functions.execute("removeBreakingCharacters", csvTweets);
 
   // Convert the CSV Tweets to JSON Tweets
+  var dCsv1 = new Date();
+  console.log("About to parse tweets using comma-separated-values at " + dCsv1);
   jsonTweets = new CSV(csvTweets, { header: true }).parse();
+
+  var dCsv2 = new Date();
+  var differenceCsv = dCsv2.getTime() - dCsv1.getTime();
+  console.log("Finished parsing tweets using comma-separated-values at " + dCsv2 + ". Total time: " + differenceCsv);
 
   // Store the results
   var results = {
@@ -50,6 +58,11 @@ exports = async function (csvTweets) {
   });
 
   //TODO: add error handling
+
+  var d2 = new Date();
+  var difference = d2.getTime() - d.getTime();
+  console.log("Exiting storeCsvInDb at " + d2 + ". Total time: " + difference);
+
   return results;
 };
 

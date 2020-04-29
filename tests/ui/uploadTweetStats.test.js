@@ -23,7 +23,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
    // Clear the database
-   await collection.deleteMany({});
+   const result = await collection.deleteMany({});
 
    // Create a new driver using headless Chrome
    let chromeCapabilities = Capabilities.chrome();
@@ -57,14 +57,10 @@ test('Single tweet', async () => {
    const dashboardLink = await driver.findElement(By.id('dashboard-link'));
    dashboardLink.click();
 
-   // Hacking this a bit since we can't access the numbers in the chart itself.
-   // Instead we'll hover over the chart and pull the values out of the tooltip.
+   await refreshChartsDashboard();
 
-   await moveToCanvasOfElement(totalEngagementsXpath);
-   await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='4']")));
-
-   await moveToCanvasOfElement(totalImpressionsXpath);
-   await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='260']")));
+   await verifyChartText(totalEngagementsXpath, "4");
+   await verifyChartText(totalImpressionsXpath, "260");
 })
 
 test('New, updates, and multiple authors', async () => {
@@ -82,15 +78,30 @@ test('New, updates, and multiple authors', async () => {
    const dashboardLink = await driver.findElement(By.id('dashboard-link'));
    dashboardLink.click();
 
-   // Hacking this a bit since we can't access the numbers in the chart itself.
-   // Instead we'll hover over the chart and pull the values out of the tooltip.
+   await refreshChartsDashboard();
 
-   await moveToCanvasOfElement(totalEngagementsXpath);
-   await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='23']")));
+   await verifyChartText(totalEngagementsXpath, "23");
+   await verifyChartText(totalImpressionsXpath, "1,323");
 
-   await moveToCanvasOfElement(totalImpressionsXpath);
-   await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='1,323']")));
 })
+
+async function verifyChartText(elementXpath, chartText) {
+   let i = 0;
+   // Getting sporadic errors so will try 5 times before failing
+
+   while (i < 5) {
+      try {
+         await moveToCanvasOfElement(elementXpath);
+         await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='" + chartText + "']")), 1000);
+      } catch (error) {
+         if (i == 4) {
+            throw e;
+         }
+      }
+      i++;
+   }
+
+}
 
 async function moveToCanvasOfElement(elementXPath) {
    let i = 0;
@@ -98,7 +109,12 @@ async function moveToCanvasOfElement(elementXPath) {
    // so we'll try 5 times in order to get around the sporadic failures
    while (i < 5) {
       try {
-         await driver.wait(until.elementLocated(By.xpath(elementXPath)));
+
+         // Hacking this a bit since we can't access the numbers in the chart itself.
+         // Instead we'll hover over the chart and pull the values out of the tooltip.
+
+         await driver.wait(until.elementLocated(By.xpath(elementXPath)), 1000);
+         await driver.wait(until.elementLocated(By.xpath(elementXPath + "/parent::*//canvas")), 1000);
          const canvas = await driver.findElement(By.xpath(elementXPath + "/parent::*//canvas"));
          const actions = driver.actions();
          await actions.move({ origin: canvas }).perform();
@@ -110,4 +126,12 @@ async function moveToCanvasOfElement(elementXPath) {
       }
       i++;
    }
+}
+
+async function refreshChartsDashboard() {
+   const downArrow = await driver.wait(until.elementLocated(By.css("span.Select-arrow-zone")));
+   downArrow.click();
+
+   const refreshButton = await driver.wait(until.elementLocated(By.xpath("//div[text()='Force Refresh']")));
+   refreshButton.click();
 }
