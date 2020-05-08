@@ -3,6 +3,10 @@ language: node_js
 node_js:
 - '12'
 addons:
+  # Installing dpkg to fix Chrome install errors
+  apt:
+    packages:
+      - dpkg
   chrome: stable
 before_script:
 - java -jar tests/ui/selenium-server-standalone-3.141.59.jar &

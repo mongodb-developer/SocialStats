@@ -1,5 +1,4 @@
 exports = async function (csvTweets) {
-
   const CSV = require("comma-separated-values");
 
   // The CSV parser chokes on emoji, so we're pulling out all non-standard characters.

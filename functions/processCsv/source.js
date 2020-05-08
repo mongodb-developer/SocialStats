@@ -5,6 +5,7 @@ exports = function (encodedData) {
   encodedData = encodedData.substring(21);
 
   const myBuffer = new Buffer(encodedData, 'base64')
+
   const decodedData = myBuffer.toString();
 
   return context.functions.execute("storeCsvInDb", decodedData);
