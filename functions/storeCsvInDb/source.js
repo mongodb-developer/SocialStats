@@ -8,17 +8,17 @@ exports = async function (csvTweets) {
   // Convert the CSV Tweets to JSON Tweets
   jsonTweets = new CSV(csvTweets, { header: true }).parse();
 
-  // Store the results
+  // Prepare the results object that we will return
   var results = {
     newTweets: [],
     updatedTweets: [],
     tweetsNotInsertedOrUpdated: []
   }
 
+  // Clean each Tweet and store it in the DB
   jsonTweets.forEach(async (tweet) => {
 
-    // TODO: double check if this is true
-    // The conversion from CSV to JSON is resulting in the Tweet ID being rounded, so we'll manually pull it out of the Tweet link
+    // The Tweet ID from the CSV is being rounded, so we'll manually pull it out of the Tweet link instead
     delete tweet["Tweet id"];
 
     // Pull the author and Tweet id out of the Tweet permalink

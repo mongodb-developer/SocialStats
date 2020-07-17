@@ -95,7 +95,7 @@ async function verifyChartText(elementXpath, chartText) {
          await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='" + chartText + "']")), 1000);
       } catch (error) {
          if (i == 4) {
-            throw e;
+            throw error;
          }
       }
       i++;
