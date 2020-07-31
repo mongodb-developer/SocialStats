@@ -84,6 +84,7 @@ To execute all of the tests locally, you will need to do the following:
 
 1. Follow the steps in the [Configuring the App](#configuring-the-app) section below to setup your Dev environment.
 1. Create a file named `test.env` inside of the `config` directory.  The file should contain values for each of the variables in [Project Variables](#project-variables).
+1. Start the Selenium Server if you will be running the UI tests: `java -jar tests/ui/selenium-server-standalone-3.141.59.jar &`
 1. Run the tests using one of the following commands:
    - `npm run start` Run the tests using the watch option, which will run tests that have been recently updated. 
    - `env-cmd -f ./config/test.env jest --runInBand` Run all of the tests. 
