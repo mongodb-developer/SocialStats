@@ -8,18 +8,15 @@ const { MongoClient } = require('mongodb');
 
 const { TwitterStatsDb, statsCollection, header, validTweetCsv, validTweetJson, validTweetId, validTweetUpdatedCsv, validTweetUpdatedJson, emojiTweetId, emojiTweetCsv, emojiTweetJson, validTweetKenId, validTweetKenCsv, validTweetKenJson } = require('../constants.js');
 
-const {
-    Stitch,
-    AnonymousCredential
-} = require('mongodb-stitch-browser-sdk');
+const RealmWeb = require('realm-web');
 
 let collection;
 let mongoClient;
-let stitchClient
+let app;
 
 beforeAll(async () => {
-    // Connect to the Stitch app
-    stitchClient = Stitch.initializeDefaultAppClient(`${process.env.STITCH_APP_ID}`);
+    // Connect to the Realm app
+    app = new RealmWeb.App({ id: `${process.env.STITCH_APP_ID}` });
 
     // Connect directly to the database
     const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.CLUSTER_URI}/test?retryWrites=true&w=majority`;
@@ -33,14 +30,13 @@ afterAll(async () => {
 })
 
 beforeEach(async () => {
-    await stitchClient.auth.loginWithCredential(new AnonymousCredential());
+    await app.logIn(RealmWeb.Credentials.anonymous());
     await collection.deleteMany({});
 });
 
-
 test('Single tweet', async () => {
 
-    expect(await stitchClient.callFunction("storeCsvInDb", [header + "\n" + validTweetCsv])).toStrictEqual({
+    expect(await app.functions.storeCsvInDb(header + "\n" + validTweetCsv)).toStrictEqual({
         newTweets: [validTweetId],
         tweetsNotInsertedOrUpdated: [],
         updatedTweets: []
@@ -52,7 +48,7 @@ test('Single tweet', async () => {
 
 test('Emoji tweet', async () => {
 
-    expect(await stitchClient.callFunction("storeCsvInDb", [header + "\n" + emojiTweetCsv])).toStrictEqual({
+    expect(await app.functions.storeCsvInDb(header + "\n" + emojiTweetCsv)).toStrictEqual({
         newTweets: [emojiTweetId],
         tweetsNotInsertedOrUpdated: [],
         updatedTweets: []
@@ -64,7 +60,7 @@ test('Emoji tweet', async () => {
 
 test('Update single tweet', async () => {
 
-    expect(await stitchClient.callFunction("storeCsvInDb", [header + "\n" + validTweetCsv])).toStrictEqual({
+    expect(await app.functions.storeCsvInDb(header + "\n" + validTweetCsv)).toStrictEqual({
         newTweets: [validTweetId],
         tweetsNotInsertedOrUpdated: [],
         updatedTweets: []
@@ -73,7 +69,7 @@ test('Update single tweet', async () => {
     let tweet = await collection.findOne({ _id: validTweetId });
     expect(tweet).toStrictEqual(validTweetJson);
 
-    expect(await stitchClient.callFunction("storeCsvInDb", [header + "\n" + validTweetUpdatedCsv])).toStrictEqual({
+    expect(await app.functions.storeCsvInDb(header + "\n" + validTweetUpdatedCsv)).toStrictEqual({
         newTweets: [],
         tweetsNotInsertedOrUpdated: [],
         updatedTweets: [validTweetId]
@@ -87,7 +83,7 @@ test('Update single tweet', async () => {
 test('Store new and updated tweets', async () => {
 
     // Store validTweet and emojiTweet
-    let results = await stitchClient.callFunction("storeCsvInDb", [header + "\n" + validTweetCsv + "\n" + emojiTweetCsv]);
+    let results = await app.functions.storeCsvInDb(header + "\n" + validTweetCsv + "\n" + emojiTweetCsv);
 
     // Sort the results to avoid test failures due to the order of the Tweets in the array
     results.newTweets = results.newTweets.sort();
@@ -107,7 +103,7 @@ test('Store new and updated tweets', async () => {
     expect(tweet).toStrictEqual(emojiTweetJson);
 
     // Store validTweetKen and updatedValidTweet
-    expect(await stitchClient.callFunction("storeCsvInDb", [header + "\n" + validTweetKenCsv + "\n" + validTweetUpdatedCsv])).toStrictEqual({
+    expect(await app.functions.storeCsvInDb(header + "\n" + validTweetKenCsv + "\n" + validTweetUpdatedCsv)).toStrictEqual({
         newTweets: [validTweetKenId],
         tweetsNotInsertedOrUpdated: [],
         updatedTweets: [validTweetId]
