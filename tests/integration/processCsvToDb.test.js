@@ -17,7 +17,7 @@ beforeAll(async () => {
     jest.setTimeout(10000);
 
     // Connect to the Realm app
-    app = new RealmWeb.App({ id: `${process.env.STITCH_APP_ID}` });
+    app = new RealmWeb.App({ id: `${process.env.REALM_APP_ID}` });
 
     // Connect directly to the database
     const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.CLUSTER_URI}/test?retryWrites=true&w=majority`;
