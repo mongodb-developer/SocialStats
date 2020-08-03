@@ -21,11 +21,11 @@
 
 </body>
 
-<script src="https://s3.amazonaws.com/stitch-sdks/js/bundles/4.6.0/stitch.js"></script>
+<script src="https://unpkg.com/realm-web@0.8.0/dist/bundle.iife.js"></script>
 <script src="./config.js"></script>
 <script>
 
-  const client = stitch.Stitch.initializeDefaultAppClient(STITCH_APP_ID);
+  const app = new Realm.App({ id: STITCH_APP_ID });
 
   document.getElementById("dashboard-link").href = CHARTS_URL;
 
@@ -57,9 +57,9 @@
     const myParam = [file];
 
     // TODO: use Google auth
-    await client.auth.loginWithCredential(new stitch.AnonymousCredential());
+    await app.logIn(Realm.Credentials.anonymous());
 
-    const result = await client.callFunction("processCsv", [file]);
+    const result = await app.functions.processCsv(file);
     console.log(result);
 
     let resultsToPrint = "";
