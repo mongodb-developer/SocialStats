@@ -1,16 +1,16 @@
-// Get the Stitch App ID from the current URL
+// Get the Realm App ID from the current URL
 // Note that this assumes you are NOT using a custom domain
 // If you are using a custom domain, you should create a 
 // switch statement with a case for every environment
 let url = window.location.hostname;
-const STITCH_APP_ID = url.split(".")[0];
+const REALM_APP_ID = url.split(".")[0];
 
 // Get the URL for the Charts dashboard based on the 
-// Stitch App Id
-const CHARTS_URL = getChartsUrl(STITCH_APP_ID);
+// Realm App Id
+const CHARTS_URL = getChartsUrl(REALM_APP_ID);
 
-function getChartsUrl(STITCH_APP_ID) {
-   switch (STITCH_APP_ID) {
+function getChartsUrl(REALM_APP_ID) {
+   switch (REALM_APP_ID) {
       case "twitterstats-vpxim":
          return "https://charts.mongodb.com/charts-twitter-stats-vzwpx/public/dashboards/82195382-6cea-4994-9283-cf2fb899c6de";
       case "socialstats-staging-pseyi":

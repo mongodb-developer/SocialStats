@@ -27,7 +27,6 @@
     "env-cmd": "^10.1.0",
     "jest": "^25.1.0",
     "jest-cli": "^25.1.0",
-    "mongodb": "^3.5.5",
-    "mongodb-stitch-browser-sdk": "^4.8.0"
+    "mongodb": "^3.5.5"
   }
 }

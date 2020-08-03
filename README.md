@@ -18,7 +18,7 @@ Table of Contents
 ## Project Goals
 
 1. Allow members of our DevRel team to view Twitter statistics individually and in aggregate
-1. Demonstrate how to test and build CI/CD (Continuous Integration/Continuous Delivery) Pipelines for serverless applications built on MongoDB Stitch
+1. Demonstrate how to test and build CI/CD (Continuous Integration/Continuous Delivery) Pipelines for serverless applications built on MongoDB Realm
 
 ## Demo of App and CI/CD Pipeline
 
@@ -41,12 +41,12 @@ The Charts Dashboard:
 
 ## About the Architecture
 
-The app is built using a serverless architecture using MongoDB Stitch.  The app consists of serverless functions, a static web page, and 
+The app is built using a serverless architecture using MongoDB Realm.  The app consists of serverless functions, a static web page, and 
 a dashboard built in MongoDB Charts.
 
 ![App Architecture Diagram](/images/architecture.png "App Architecture Diagram")
 
-When a user accesses the `index.html` page, they are accessing the `index.html` page that is hosted by Stitch.  
+When a user accesses the `index.html` page, they are accessing the `index.html` page that is hosted by Realm.  
 
 When a user uploads their CSV file with all of their Twitter stats, `index.html` encodes the CSV files and calls the `processCSV` serverless function.  That function is in charge of decoding the CSV file and passing the results to the `storeCsvInDb` serverless function.  
 
@@ -57,7 +57,7 @@ The `storeCsvInDb` function calls the `removeBreakingCharacters` function, which
 
 Then the results are passed back up the chain and ultimately displayed on the webpage.
 
-At a high level, the `index.html` file hosted on Stitch calls a series of Stitch serverless functions to store information in a database hosted on Atlas.
+At a high level, the `index.html` file hosted on Realm calls a series of Realm serverless functions to store information in a database hosted on Atlas.
 
 When we view the dashboard with all of the charts showing a summary of our Tweet statistics, we are accessing a MongoDB Charts dashboard.  The dashboard pulls data from MongoDB Atlas and displays it.
 
@@ -69,8 +69,8 @@ The following is a list of variables you should add to config files and your Tra
     * DB_USERNAME:  the username for the MongoDB database you are using for development and testing
     * DB_PASSWORD: the password associated with the above account
     * CLUSTER_URI: the URI for your MongoDB cluster.  For example:  cluster0-ffee0.mongodb.net
-    * STITCH_APP_ID: the ID of the Stitch app you are using for development and testing. For example:  twitterstats-asdf
-    * URL: the URL for your Stitch app.  For example:  https://twitterstats-asdf.mongodbstitch.com
+    * REALM_APP_ID: the ID of the Realm app you are using for development and testing. For example:  twitterstats-were
+    * URL: the URL for your Realm app.  For example:  https://twitterstats-asdf.mongodbstitch.com
 
 ## Automated Tests
 
@@ -128,7 +128,7 @@ Below is a table the highlights what is happening at each stage and between stag
 --- | --- | --- | --- | --- | --- | ---  | ---
 **Git** | Local copy of the Dev Repo | `git push`  | Dev Repo (forked copy of Staging Repo) | Pull request | Staging Repo (mirrored copy of Prod Repo) | `git push` via Travis CI Staging Build. (Or manual `git push`.) | Prod Repo
 **Atlas** | n/a |  Dev Project. (Or single Atlas Project with Dev cluster.) | Dev Project. (Or single Atlas Project with Dev cluster.) | Staging Project. (Or single Atlas Project with Staging cluster.) | Staging Project. (Or single Atlas Project with Staging cluster.) | Prod Project. (Or single Atlas Project with Prod cluster.) | Prod Project. (Or single Atlas Project with Prod cluster.)
-**Stitch** | n/a |  `git push` triggers deploy to Dev App | Dev App | Merging of pull request triggers deploy to Staging App | Staging App  | Push from successful Staging Build triggers deploy to Prod App. (Or manual `git push` triggers build.) | Prod App
+**Realm** | n/a |  `git push` triggers deploy to Dev App | Dev App | Merging of pull request triggers deploy to Staging App | Staging App  | Push from successful Staging Build triggers deploy to Prod App. (Or manual `git push` triggers build.) | Prod App
 **Travis CI (runs tests—does not deploy)** | n/a | `git push` triggers build  | n/a | Merging of pull request triggers build |  n/a | Push from successful Staging build triggers build. (Or manual `git push` triggers build.) | n/a
 **Automated Tests** | Unit | Unit, Integration, & UI run as part of Travis CI build | Unit, Integration, & UI | Unit, Integration, & UI run as part of Travis CI build | Unit, Integration, & UI | Unit run as part of Travis CI build | Unit
 
@@ -136,7 +136,7 @@ Below is a table the highlights what is happening at each stage and between stag
 
 I do my development work locally on my machine.
 * **Git**: I have a local copy of my development git repo.  The repo stores everything in my app including my hosted html files and my serverless functions.
-* **Tests**: I can run unit tests that test my serverless functions.  Since I don’t have a way to run Stitch locally on my machine, that’s all I can test.  I need to push my code to Stitch in order to run manual tests, integration tests, and UI tests.
+* **Tests**: I can run unit tests that test my serverless functions.  Since I don’t have a way to run Realm locally on my machine, that’s all I can test.  I need to push my code to Realm in order to run manual tests, integration tests, and UI tests.
 
 ### Moving from Local to Development
 
@@ -144,15 +144,15 @@ When I'm ready to try out my code, I'm going to move from Local to Development.
 
 * **How to Move**: I’m going to push changes (`git push`) to my Development Repo.  
 * **Git**: My Dev Repo is a forked copy of the Staging Repo.  My Dev Repo is specific to me.  My teammates have their own Dev Repos.
-* **Stitch and Atlas**: One of the nice things about Stitch is that it has a [GitHub auto deploy feature](https://docs.mongodb.com/stitch/deploy/deploy-automatically-with-github/) so that whenever I push changes to an associated GitHub repo, the code in that repo is automatically deployed to my Stitch app.  That Stitch app will be associated with an Atlas project.  The Atlas project is where my database lives.  In my case, I chose to have separate Atlas projects for each stage, so I could take advantage of the free clusters in Atlas.  If you are paying for clusters, you can easily use a single Atlas project for all of your stages.  <br><br>
-You might be wondering why I have a git repo specifically for Dev rather than using a single repo with a branch for each stage.  The Stitch auto deploy feature currently only allows you to auto deploy from the master branch, so I need a separate repo for each stage.
-* **Travis CI and Tests**: The `git push` is going to trigger a Travis CI build.  The build is responsible for running all of my automated tests.  The build is going to run those tests against the Dev Stitch App that was just deployed.  If you have experience with CI/CD infrastructure, this might feel a little odd to you—Travis CI is responsible for running the tests but not for doing the deploy.  So, even if the tests fail, the deploy has already occurred.  This is OK since this is not production—it’s just my dev environment.  
+* **Realm and Atlas**: One of the nice things about Realm is that it has a [GitHub auto deploy feature](https://docs.mongodb.com/realm/deploy/deploy-automatically-with-github/) so that whenever I push changes to an associated GitHub repo, the code in that repo is automatically deployed to my Realm app.  That Realm app will be associated with an Atlas project.  The Atlas project is where my database lives.  In my case, I chose to have separate Atlas projects for each stage, so I could take advantage of the free clusters in Atlas.  If you are paying for clusters, you can easily use a single Atlas project for all of your stages.  <br><br>
+You might be wondering why I have a git repo specifically for Dev rather than using a single repo with a branch for each stage.  The Realm auto deploy feature currently only allows you to auto deploy from the master branch, so I need a separate repo for each stage.
+* **Travis CI and Tests**: The `git push` is going to trigger a Travis CI build.  The build is responsible for running all of my automated tests.  The build is going to run those tests against the Dev Realm App that was just deployed.  If you have experience with CI/CD infrastructure, this might feel a little odd to you—Travis CI is responsible for running the tests but not for doing the deploy.  So, even if the tests fail, the deploy has already occurred.  This is OK since this is not production—it’s just my dev environment.  
 
 ### Development
 
 Every developer has their own Development stage.
 * **Git**: My Dev Repo is a forked copy of the Staging repo.  My Dev Repo is specific to me.  My teammates have their own Dev Repos.
-* **Stitch and Atlas**: My code is deployed in my Dev Stitch App, which is connected to my Dev Atlas Project.
+* **Realm and Atlas**: My code is deployed in my Dev Realm App, which is connected to my Dev Atlas Project.
 * **Tests**: I can choose to run manual tests against this deployment.  I can use also my local machine to run automated tests against this deployment.
 
 ### Moving from Development to Staging
@@ -161,8 +161,8 @@ When I feel like my code is well tested and I’m ready for a teammate to review
 
 * **How to Move**: I’m going to create a pull request.  Pull requests are a way for me to request that my code be reviewed and considered for merging into the team’s code.
 If my pull request is approved, the code changes will be merged into our team's Staging Repo.  
-* **Git**: The Staging Repo is a mirrored copy of the Production Repo.  We’re using separate repos so we can take advantage of Stitch auto deployments.
-* **Stitch and Atlas**:  When my code is merged into the Staging Repo, it will be automatically deployed to my Staging Stitch App that is associated with my Staging Atlas Project.
+* **Git**: The Staging Repo is a mirrored copy of the Production Repo.  We’re using separate repos so we can take advantage of Realm auto deployments.
+* **Realm and Atlas**:  When my code is merged into the Staging Repo, it will be automatically deployed to my Staging Realm App that is associated with my Staging Atlas Project.
 * **Travis CI and Tests**: The merging of my pull request is also going to trigger a Travis CI build.  That build is gong to run all of my automated tests.  If the build passes—meaning that all of my automated tests pass—the build is going to automatically push the code changes to my Prod Repo.  I’ll discuss this more below in the section about [Moving from Staging to Prod](#moving-from-staging-to-production).
 
 ### Staging
@@ -170,7 +170,7 @@ If my pull request is approved, the code changes will be merged into our team's 
 Staging is a place for all of my teammates to merge our code together and see what it will look like in production. 
 
 * **Git**: The Staging Repo is a mirrored copy of the Production Repo.
-* **Stitch and Atlas**: My code is deployed in the Staging Stitch App, which is connected to the Staging Atlas Project. 
+* **Realm and Atlas**: My code is deployed in the Staging Realm App, which is connected to the Staging Atlas Project. 
 * **Tests**: This stage is a simulation of Production, so it’s our place to do all of our QA testing.  I can choose to run manual tests against this deployment.  If I want to run the automated tests, I can use my local machine to run the tests against this deployment.
 
 ### Moving from Staging to Production
@@ -180,7 +180,7 @@ Since we’re following the continuous deployment model, we have a ton of automa
 * **How to Move**: If the Staging build passes—meaning that all of the tests pass—the Staging build will automatically push the code changes to production.
 So instead of having a manual `git push` or a pull request trigger our move to Production, the Staging Build does the `git push` for us.
 * **Git**: The code is in the Prod git repo.
-* **Stitch and Atlas**: We still have the GitHub auto deployment feature configured, so the push to the Prod Repo is going to trigger a deployment to our Prod Stitch App.  That Prod Stitch App is associated with a Prod Atlas Project where our prod data is stored.
+* **Realm and Atlas**: We still have the GitHub auto deployment feature configured, so the push to the Prod Repo is going to trigger a deployment to our Prod Realm App.  That Prod Realm App is associated with a Prod Atlas Project where our prod data is stored.
 * **Travis CI and Tests**: The push to the Prod Repo is going to trigger our Prod Build.  The Prod Build only runs the unit tests.  Recall that our integration and UI tests interact with our database, and we don’t want to mess up our Prod database, so we’re only running our unit tests.
 In my case, the pipeline stops here.  You may have monitoring or other tools or tests you want to run here.  It all depends on what your team’s requirements are.
 
@@ -189,12 +189,12 @@ In my case, the pipeline stops here.  You may have monitoring or other tools or 
 Production is the version of the app that my end users interact with. 
 
 * **Git**: The code is in the Prod Repo.
-* **Stitch and Atlas**: Our app is deployed in the Prod Stitch App, and our Prod data is in the associated Prod Atlas Project.
+* **Realm and Atlas**: Our app is deployed in the Prod Realm App, and our Prod data is in the associated Prod Atlas Project.
 * **Tests**: If we want to run tests, we can use our local machines to execute unit tests against the code in the Prod Repo.
 
 ## Automated Deployments
 
-The code is deployed to Stitch using [automated GitHub deployments](https://docs.mongodb.com/stitch/deploy/deploy-automatically-with-github/).  Since the automatated GitHub deployments currently only deploy from the master branch, we have a separate repo for each stage in the CI/CD pipeline.
+The code is deployed to Realm using [automated GitHub deployments](https://docs.mongodb.com/realm/deploy/deploy-automatically-with-github/).  Since the automated GitHub deployments currently only deploy from the master branch, we have a separate repo for each stage in the CI/CD pipeline.
 
 ## Travis CI Builds
 
@@ -237,11 +237,11 @@ Complete the following steps for EACH stage AFTER setting up the Git repos as de
    1. Create a cluster (a free cluster is fine if you are not using the app in production).
    1. Create a database user for your tests. The user should have read and write privileges.
    1. Whitelist your current IP address.
-   1. [Create a MongoDB Stitch application](https://docs.mongodb.com/stitch/procedures/create-stitch-app/) in this Atlas project.  Then...
+   1. [Create a MongoDB Realm application](https://docs.mongodb.com/realm/procedures/create-realm-app/) in this Atlas project.  Then...
       1. Enable auto deploy.
       1. Enable hosting.
-      1. [Load function dependencies](https://docs.mongodb.com/stitch/functions/upload-external-dependencies/) for the comma-separated-values npm module.
-      1. Review and deploy changes to Stitch app.
+      1. [Load function dependencies](https://docs.mongodb.com/realm/functions/upload-external-dependencies/) for the comma-separated-values npm module.
+      1. Review and deploy changes to Realm app.
 1. **Charts**
    1. Activate Charts in your Atlas project.
    1. Inside of Charts, add a Data Source for your Atlas cluster.
@@ -255,7 +255,7 @@ Complete the following steps for EACH stage AFTER setting up the Git repos as de
    1. Run the [Travis CI IP Whitelister](https://github.com/mongodb-developer/Travic-CI-IP-Address-Whitelister) so Travis CI can access your database hosted on Atlas.
    1. Add your repo to Travis CI (you may need to sign out and sign back in to see the repo in your list of repos).
    1. Add the variables described in [Project Variables](#project-variables) to your build's Environment Variables.
-   1. Disable `build on pushed pull requests` since Stitch will not deploy on PRs. If you left this option enabled, your tests would be running against an old deployment.
+   1. Disable `build on pushed pull requests` since Realm will not deploy on PRs. If you left this option enabled, your tests would be running against an old deployment.
 
 ### Configuring Production
 
