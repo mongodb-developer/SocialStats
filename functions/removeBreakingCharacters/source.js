@@ -7,6 +7,6 @@ exports = function (csvTweets) {
   return csvTweets;
 };
 
-if (typeof module !== 'undefined') {
+if (typeof module === 'object') {
   module.exports = exports;
 }

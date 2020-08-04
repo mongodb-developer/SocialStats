@@ -52,6 +52,6 @@ exports = async function (csvTweets) {
   return results;
 };
 
-if (typeof module !== 'undefined') {
+if (typeof module === 'object') {
   module.exports = exports;
 }

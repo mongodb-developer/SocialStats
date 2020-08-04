@@ -11,6 +11,6 @@ exports = function (encodedData) {
   return context.functions.execute("storeCsvInDb", decodedData);
 };
 
-if (typeof module !== 'undefined') {
+if (typeof module === 'object') {
   module.exports = exports;
 }
