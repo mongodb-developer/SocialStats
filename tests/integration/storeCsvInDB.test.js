@@ -18,6 +18,9 @@ beforeAll(async () => {
     // Connect to the Realm app
     app = new RealmWeb.App({ id: `${process.env.REALM_APP_ID}` });
 
+    // Login to the Realm app with anonymous credentials
+    await app.logIn(RealmWeb.Credentials.anonymous());
+
     // Connect directly to the database
     const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.CLUSTER_URI}/test?retryWrites=true&w=majority`;
     mongoClient = new MongoClient(uri);
@@ -30,7 +33,6 @@ afterAll(async () => {
 })
 
 beforeEach(async () => {
-    await app.logIn(RealmWeb.Credentials.anonymous());
     await collection.deleteMany({});
 });
 

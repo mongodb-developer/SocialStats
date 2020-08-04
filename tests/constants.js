@@ -100,9 +100,60 @@ const validTweetUpdatedJson = {
     "user profile clicks": 3
 };
 
+const validTweet2Id = "1226929883355791365";
+
+const validTweet2Csv = `"${validTweet2Id}","https://twitter.com/Lauren_Schaefer/status/${validTweet2Id}","Another tweet from me <3","2020-02-11 18:00 +0000","1203.0","39.0","0.032418952618453865","4.0","0.0","7.0","2.0","22.0","0.0","4.0","0.0","0","0","0","0","0","0","0","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-"`;
+
+const validTweet2Json = {
+    "Tweet permalink": "https://twitter.com/Lauren_Schaefer/status/" + validTweet2Id,
+    "Tweet text": "Another tweet from me <3",
+    "_id": validTweet2Id,
+    "app installs": 0,
+    "app opens": 0,
+    "author": "Lauren_Schaefer",
+    "date": new Date("2020-02-11 00:00 +0000"),
+    "detail expands": 4,
+    "dial phone": 0,
+    "email tweet": 0,
+    "engagement rate": 0.032418952618453865,
+    "engagements": 39,
+    "follows": 0,
+    "hashtag clicks": 0,
+    "impressions": 1203,
+    "likes": 7,
+    "media engagements": 0,
+    "media views": 0,
+    "permalink clicks": 0,
+    "promoted app installs": "-",
+    "promoted app opens": "-",
+    "promoted detail expands": "-",
+    "promoted dial phone": "-",
+    "promoted email tweet": "-",
+    "promoted engagement rate": "-",
+    "promoted engagements": "-",
+    "promoted follows": "-",
+    "promoted hashtag clicks": "-",
+    "promoted impressions": "-",
+    "promoted likes": "-",
+    "promoted media engagements": "-",
+    "promoted media views": "-",
+    "promoted permalink clicks": "-",
+    "promoted replies": "-",
+    "promoted retweets": "-",
+    "promoted url clicks": "-",
+    "promoted user profile clicks": "-",
+    "replies": 0,
+    "retweets": 4,
+    "time": "2020-02-11 18:00 +0000",
+    "url clicks": 22,
+    "user profile clicks": 2
+}
+
 const emojiTweetId = "1226928883355791361";
 
 const emojiTweetCsv = `"${emojiTweetId}","https://twitter.com/Lauren_Schaefer/status/${emojiTweetId}","Emoji tweet 😀💅👸","2020-02-11 18:00 +0000","1203.0","39.0","0.032418952618453865","4.0","0.0","7.0","2.0","22.0","0.0","4.0","0.0","0","0","0","0","0","0","0","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-"`;
+
+const emojiTweetCsvClean = `"${emojiTweetId}","https://twitter.com/Lauren_Schaefer/status/${emojiTweetId}","Emoji tweet ","2020-02-11 18:00 +0000","1203.0","39.0","0.032418952618453865","4.0","0.0","7.0","2.0","22.0","0.0","4.0","0.0","0","0","0","0","0","0","0","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-"`;
 
 const emojiTweetJson = {
     "Tweet permalink": "https://twitter.com/Lauren_Schaefer/status/" + emojiTweetId,
@@ -198,6 +249,10 @@ const validTweetKenJson = {
     "user profile clicks": 5
 };
 
+const specialCharactersTweetId = "1226921113355791366";
+
+const specialCharactersTweetCsv = `"${specialCharactersTweetId}","https://twitter.com/Lauren_Schaefer/status/${specialCharactersTweetId}","Lots of special characters 0123456789 !@#$%^&*()-_=+[]{}\\|;:'",./<>? \`~","2020-02-12 18:00 +0000","1203.0","39.0","0.032418952618453865","4.0","0.0","7.0","2.0","22.0","0.0","4.0","0.0","0","0","0","0","0","0","0","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-"`;
+
 module.exports = {
     TwitterStatsDb,
     statsCollection,
@@ -205,12 +260,18 @@ module.exports = {
     validTweetId,
     validTweetCsv,
     validTweetJson,
+    validTweet2Id,
+    validTweet2Csv,
+    validTweet2Json,
     validTweetUpdatedCsv,
     validTweetUpdatedJson,
     emojiTweetId,
     emojiTweetCsv,
+    emojiTweetCsvClean,
     emojiTweetJson,
     validTweetKenId,
     validTweetKenCsv,
-    validTweetKenJson
+    validTweetKenJson,
+    specialCharactersTweetId,
+    specialCharactersTweetCsv
 };
