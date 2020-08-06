@@ -50,33 +50,40 @@
     console.log("Processing file...");
     document.getElementById('results').innerText = 'Processing file...'
 
-    // TODO: Disallow or handle multiple files
-    // TODO: Handle errors
-    const files = event.target.files;
-    const file = await convertToBase64(files[0]);
-    const myParam = [file];
+    try {
 
-    // TODO: use Google auth
-    await app.logIn(Realm.Credentials.anonymous());
+      // TODO: Disallow or handle multiple files
+      // TODO: Handle errors
+      const files = event.target.files;
+      const file = await convertToBase64(files[0]);
+      const myParam = [file];
 
-    const result = await app.functions.processCsv(file);
-    console.log(result);
+      // TODO: use Google auth
+      await app.logIn(Realm.Credentials.anonymous());
 
-    let resultsToPrint = "";
-    if (result.tweetsNotInsertedOrUpdated.length > 0) {
-      resultsToPrint += `${result.tweetsNotInsertedOrUpdated.length} Tweet(s) were not inserted or updated.\n`;
-    }
-    if (result.newTweets.length > 0 || result.updatedTweets.length > 0) {
-      resultsToPrint += "Fabulous! ";
-      if (result.newTweets.length > 0) {
-        resultsToPrint += `${result.newTweets.length} new Tweet(s) was/were saved. `;
+      const result = await app.functions.processCsv(file);
+      console.log(result);
+
+      let resultsToPrint = "";
+      if (result.tweetsNotInsertedOrUpdated.length > 0) {
+        resultsToPrint += `${result.tweetsNotInsertedOrUpdated.length} Tweet(s) were not inserted or updated.\n`;
       }
-      if (result.updatedTweets.length > 0) {
-        resultsToPrint += `${result.updatedTweets.length} Tweet(s) was/were updated.`;
+      if (result.newTweets.length > 0 || result.updatedTweets.length > 0) {
+        resultsToPrint += "Fabulous! ";
+        if (result.newTweets.length > 0) {
+          resultsToPrint += `${result.newTweets.length} new Tweet(s) was/were saved. `;
+        }
+        if (result.updatedTweets.length > 0) {
+          resultsToPrint += `${result.updatedTweets.length} Tweet(s) was/were updated.`;
+        }
       }
+
+      document.getElementById('results').innerText = resultsToPrint;
+    } catch (error) {
+      console.error(error);
+      document.getElementById('results').innerText = "An error occurred while trying to process your file. Please try again.";
     }
 
-    document.getElementById('results').innerText = resultsToPrint;
   })
 </script>
 

@@ -32,7 +32,6 @@ beforeEach(() => {
     }
 });
 
-
 test('Single tweet', async () => {
 
     const csvTweets = header + "\n" + validTweetCsv;
@@ -97,3 +96,27 @@ test('Multiple tweets', async () => {
         },
         { upsert: true });
 })
+
+test('Single tweet with exception', async () => {
+
+    updateOne.mockImplementation(() => {
+        throw new Error();
+    });
+
+    const csvTweets = header + "\n" + validTweetCsv;
+
+    expect(await storeCsvInDb(csvTweets)).toStrictEqual({
+        newTweets: [],
+        tweetsNotInsertedOrUpdated: [validTweetId],
+        updatedTweets: []
+    });
+
+    expect(context.functions.execute).toHaveBeenCalledWith("removeBreakingCharacters", csvTweets);
+    expect(context.services.get.db.collection.updateOne).toHaveBeenCalledWith(
+        { _id: validTweetId },
+        {
+            $set: validTweetJson
+        },
+        { upsert: true });
+})
+
