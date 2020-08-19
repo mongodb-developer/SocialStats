@@ -32,23 +32,27 @@ exports = async function (csvTweets) {
     // Generate a date from the time string
     tweet.date = new Date(tweet.time.substring(0, 10));
 
-    // Upsert the Tweet, so we can update stats for existing Tweets
-    const result = await context.services.get("mongodb-atlas").db("TwitterStats").collection("stats").updateOne(
-      { _id: tweet._id },
-      { $set: tweet },
-      { upsert: true });
+    try {
+      // Upsert the Tweet, so we can update stats for existing Tweets
+      const result = await context.services.get("mongodb-atlas").db("TwitterStats").collection("stats").updateOne(
+        { _id: tweet._id },
+        { $set: tweet },
+        { upsert: true });
 
-    if (result.upsertedId) {
-      results.newTweets.push(tweet._id);
-    } else if (result.modifiedCount > 0) {
-      results.updatedTweets.push(tweet._id);
-    } else {
+      if (result.upsertedId) {
+        results.newTweets.push(tweet._id);
+      } else if (result.modifiedCount > 0) {
+        results.updatedTweets.push(tweet._id);
+      } else {
+        results.tweetsNotInsertedOrUpdated.push(tweet._id);
+      }
+    } catch (error) {
+      console.error(error);
       results.tweetsNotInsertedOrUpdated.push(tweet._id);
     }
 
   });
 
-  //TODO: add error handling
   return results;
 };
 

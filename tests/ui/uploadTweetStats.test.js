@@ -75,13 +75,16 @@ test('New, updates, and multiple authors', async () => {
    await button.sendKeys(process.cwd() + "/tests/ui/files/twotweets_updated.csv");
    await driver.wait(until.elementTextIs(results, `Fabulous! 3 new Tweet(s) was/were saved. 2 Tweet(s) was/were updated.`), 10000);
 
+   await button.sendKeys(process.cwd() + "/tests/ui/files/threetweets_ken.csv");
+   await driver.wait(until.elementTextIs(results, `Fabulous! 3 new Tweet(s) was/were saved.`), 10000);
+
    const dashboardLink = await driver.findElement(By.id('dashboard-link'));
    dashboardLink.click();
 
    await refreshChartsDashboard();
 
-   await verifyChartText(totalEngagementsXpath, "23");
-   await verifyChartText(totalImpressionsXpath, "1,323");
+   await verifyChartText(totalEngagementsXpath, "119");
+   await verifyChartText(totalImpressionsXpath, "4,803");
 
 })
 
