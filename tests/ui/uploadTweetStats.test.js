@@ -84,6 +84,7 @@ test('New, updates, and multiple authors', async () => {
    await refreshChartsDashboard();
 
    await verifyChartText(totalEngagementsXpath, "119");
+
    await verifyChartText(totalImpressionsXpath, "4,803");
 
 })
@@ -95,7 +96,7 @@ async function verifyChartText(elementXpath, chartText) {
    while (i < 5) {
       try {
          await moveToCanvasOfElement(elementXpath);
-         await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='" + chartText + "']")), 1000);
+         await driver.wait(until.elementLocated(By.xpath("//*[@id='vg-tooltip-element']//*[text()='" + chartText + "']")), 5000);
       } catch (error) {
          if (i == 4) {
             throw error;
@@ -116,7 +117,7 @@ async function moveToCanvasOfElement(elementXPath) {
          // Hacking this a bit since we can't access the numbers in the chart itself.
          // Instead we'll hover over the chart and pull the values out of the tooltip.
 
-         await driver.wait(until.elementLocated(By.xpath(elementXPath)), 1000);
+         await driver.wait(until.elementLocated(By.xpath(elementXPath)), 10000);
          await driver.wait(until.elementLocated(By.xpath(elementXPath + "/parent::*//canvas")), 1000);
          const canvas = await driver.findElement(By.xpath(elementXPath + "/parent::*//canvas"));
          const actions = driver.actions();
