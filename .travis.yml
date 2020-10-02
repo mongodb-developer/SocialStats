@@ -24,6 +24,9 @@ script:
 after_success:
 # If the tests pass on Staging, push the commits to Production
 - if [ $TRAVIS_BRANCH == "staging" ] ; then
+    git branch;
+    git fetch;
+    git status;
     git checkout master;
     git merge staging;
   fi
