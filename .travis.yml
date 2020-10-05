@@ -25,9 +25,9 @@ script:
 after_success:
 # If the tests pass on Staging, push the commits to Production
 - if [ $TRAVIS_BRANCH == "staging" ] ; then
-    git remote -v
+    git remote -v;
     git remote add SocialStats https://${GITHUB_TOKEN}@github.com/mongodb-developer/SocialStats.git;
-    git remote -v
+    git remote -v;
     git checkout master;
     git merge SocialStats/staging;
     git push SocialStats master;
