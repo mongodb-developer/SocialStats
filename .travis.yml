@@ -27,7 +27,7 @@ after_success:
 - if [ $TRAVIS_BRANCH == "staging" ] ; then
     git remote -v;
     git branch -a;
-    git fetch https://${GITHUB_TOKEN}@github.com/mongodb-developer/SocialStats.git
+    git fetch https://${GITHUB_TOKEN}@github.com/mongodb-developer/SocialStats.git;
     git branch -a;
     git checkout master;
     git merge staging;
