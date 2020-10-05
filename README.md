@@ -22,7 +22,7 @@ Table of Contents
 
 ## Demo of App and CI/CD Pipeline
 
-If you prefer to learn by video, [check out the webinar](https://www.mongodb.com/presentations/devops--mongodb-serverless--your-success) I gave in April 2020 entitled "DevOps + MongoDB Serverless = 😍". In the webinar, I give a demo of this app and explain how the CI/CD pipeline is configured.
+If you prefer to learn by video, [check out this recording](https://youtu.be/RlouET0cPsc) of a talk I gave at MongoDB.live in June 2020 entitled "DevOps + MongoDB Serverless = 😍". In the talk, I give a demo of this app and explain how the CI/CD pipeline is configured.
 
 [![DevOps + MongoDB Serverless = 😍 Webinar Screenshot](/images/webinar.png "DevOps + MongoDB Serverless = 😍 Webinar Screenshot")](https://www.mongodb.com/presentations/devops--mongodb-serverless--your-success)
 
@@ -126,7 +126,7 @@ Below is a table the highlights what is happening at each stage and between stag
 
 . | Local | --> | Dev | --> | Staging | --> | Prod 
 --- | --- | --- | --- | --- | --- | ---  | ---
-**Git** | Local copy of the Dev Repo | `git push`  | Dev Repo (forked copy of Staging Repo) | Pull request | Staging Repo (mirrored copy of Prod Repo) | `git push` via Travis CI Staging Build. (Or manual `git push`.) | Prod Repo
+**Git** | Local copy of the development branch (for example, dev-lauren) | `git push`  | development branch (for example, `dev-lauren`) | Pull request | `staging` branch | `git push` via Travis CI Staging Build. (Or manual `git push`.) | `master` branch
 **Atlas** | n/a |  Dev Project. (Or single Atlas Project with Dev cluster.) | Dev Project. (Or single Atlas Project with Dev cluster.) | Staging Project. (Or single Atlas Project with Staging cluster.) | Staging Project. (Or single Atlas Project with Staging cluster.) | Prod Project. (Or single Atlas Project with Prod cluster.) | Prod Project. (Or single Atlas Project with Prod cluster.)
 **Realm** | n/a |  `git push` triggers deploy to Dev App | Dev App | Merging of pull request triggers deploy to Staging App | Staging App  | Push from successful Staging Build triggers deploy to Prod App. (Or manual `git push` triggers build.) | Prod App
 **Travis CI (runs tests—does not deploy)** | n/a | `git push` triggers build  | n/a | Merging of pull request triggers build |  n/a | Push from successful Staging build triggers build. (Or manual `git push` triggers build.) | n/a
@@ -135,23 +135,22 @@ Below is a table the highlights what is happening at each stage and between stag
 ### Local
 
 I do my development work locally on my machine.
-* **Git**: I have a local copy of my development git repo.  The repo stores everything in my app including my hosted html files and my serverless functions.
+* **Git**: I have a local copy of my development branch in the project repo.  The project repo stores everything in my app including my hosted html files and my serverless functions.
 * **Tests**: I can run unit tests that test my serverless functions.  Since I don’t have a way to run Realm locally on my machine, that’s all I can test.  I need to push my code to Realm in order to run manual tests, integration tests, and UI tests.
 
 ### Moving from Local to Development
 
 When I'm ready to try out my code, I'm going to move from Local to Development.  
 
-* **How to Move**: I’m going to push changes (`git push`) to my Development Repo.  
-* **Git**: My Dev Repo is a forked copy of the Staging Repo.  My Dev Repo is specific to me.  My teammates have their own Dev Repos.
-* **Realm and Atlas**: One of the nice things about Realm is that it has a [GitHub auto deploy feature](https://docs.mongodb.com/realm/deploy/deploy-automatically-with-github/) so that whenever I push changes to an associated GitHub repo, the code in that repo is automatically deployed to my Realm app.  That Realm app will be associated with an Atlas project.  The Atlas project is where my database lives.  In my case, I chose to have separate Atlas projects for each stage, so I could take advantage of the free clusters in Atlas.  If you are paying for clusters, you can easily use a single Atlas project for all of your stages.  <br><br>
-You might be wondering why I have a git repo specifically for Dev rather than using a single repo with a branch for each stage.  The Realm auto deploy feature currently only allows you to auto deploy from the master branch, so I need a separate repo for each stage.
+* **How to Move**: I’m going to push changes (`git push`) to my development branch.  
+* **Git**: I have a development branch specific to me.  Mine is named `dev-lauren`.  My teammates have their own development branches.
+* **Realm and Atlas**: One of the nice things about Realm is that it has a [GitHub auto deploy feature](https://docs.mongodb.com/realm/deploy/deploy-automatically-with-github/) so that whenever I push changes to an associated GitHub repo, the code in that repo is automatically deployed to my Realm app.  That Realm app will be associated with an Atlas project.  The Atlas project is where my database lives.  In my case, I chose to have separate Atlas projects for each stage, so I could take advantage of the free clusters in Atlas.  If you are paying for clusters, you can easily use a single Atlas project for all of your stages.  
 * **Travis CI and Tests**: The `git push` is going to trigger a Travis CI build.  The build is responsible for running all of my automated tests.  The build is going to run those tests against the Dev Realm App that was just deployed.  If you have experience with CI/CD infrastructure, this might feel a little odd to you—Travis CI is responsible for running the tests but not for doing the deploy.  So, even if the tests fail, the deploy has already occurred.  This is OK since this is not production—it’s just my dev environment.  
 
 ### Development
 
 Every developer has their own Development stage.
-* **Git**: My Dev Repo is a forked copy of the Staging repo.  My Dev Repo is specific to me.  My teammates have their own Dev Repos.
+* **Git**: My development branch is specific to me.  My teammates have their own development branches.
 * **Realm and Atlas**: My code is deployed in my Dev Realm App, which is connected to my Dev Atlas Project.
 * **Tests**: I can choose to run manual tests against this deployment.  I can use also my local machine to run automated tests against this deployment.
 
@@ -161,15 +160,15 @@ When I feel like my code is well tested and I’m ready for a teammate to review
 
 * **How to Move**: I’m going to create a pull request.  Pull requests are a way for me to request that my code be reviewed and considered for merging into the team’s code.
 If my pull request is approved, the code changes will be merged into our team's Staging Repo.  
-* **Git**: The Staging Repo is a mirrored copy of the Production Repo.  We’re using separate repos so we can take advantage of Realm auto deployments.
-* **Realm and Atlas**:  When my code is merged into the Staging Repo, it will be automatically deployed to my Staging Realm App that is associated with my Staging Atlas Project.
-* **Travis CI and Tests**: The merging of my pull request is also going to trigger a Travis CI build.  That build is gong to run all of my automated tests.  If the build passes—meaning that all of my automated tests pass—the build is going to automatically push the code changes to my Prod Repo.  I’ll discuss this more below in the section about [Moving from Staging to Prod](#moving-from-staging-to-production).
+* **Git**: Pull Requests will request to merge code from a development branch to the `staging` branch.
+* **Realm and Atlas**:  When my code is merged into the `staging` branch, it will be automatically deployed to my Staging Realm App that is associated with my Staging Atlas Project.
+* **Travis CI and Tests**: The merging of my pull request is also going to trigger a Travis CI build.  That build is gong to run all of my automated tests.  If the build passes—meaning that all of my automated tests pass—the build is going to automatically push the code changes to the `master` branch.  I’ll discuss this more below in the section about [Moving from Staging to Prod](#moving-from-staging-to-production).
 
 ### Staging
 
 Staging is a place for all of my teammates to merge our code together and see what it will look like in production. 
 
-* **Git**: The Staging Repo is a mirrored copy of the Production Repo.
+* **Git**: The `staging` branch stores the code for this stage.
 * **Realm and Atlas**: My code is deployed in the Staging Realm App, which is connected to the Staging Atlas Project. 
 * **Tests**: This stage is a simulation of Production, so it’s our place to do all of our QA testing.  I can choose to run manual tests against this deployment.  If I want to run the automated tests, I can use my local machine to run the tests against this deployment.
 
@@ -179,8 +178,8 @@ Since we’re following the continuous deployment model, we have a ton of automa
 
 * **How to Move**: If the Staging build passes—meaning that all of the tests pass—the Staging build will automatically push the code changes to production.
 So instead of having a manual `git push` or a pull request trigger our move to Production, the Staging Build does the `git push` for us.
-* **Git**: The code is in the Prod git repo.
-* **Realm and Atlas**: We still have the GitHub auto deployment feature configured, so the push to the Prod Repo is going to trigger a deployment to our Prod Realm App.  That Prod Realm App is associated with a Prod Atlas Project where our prod data is stored.
+* **Git**: The code is pushed to the `master` branch.
+* **Realm and Atlas**: We still have the GitHub auto deployment feature configured, so the push to the `master` branch is going to trigger a deployment to our Prod Realm App.  That Prod Realm App is associated with a Prod Atlas Project where our prod data is stored.
 * **Travis CI and Tests**: The push to the Prod Repo is going to trigger our Prod Build.  The Prod Build only runs the unit tests.  Recall that our integration and UI tests interact with our database, and we don’t want to mess up our Prod database, so we’re only running our unit tests.
 In my case, the pipeline stops here.  You may have monitoring or other tools or tests you want to run here.  It all depends on what your team’s requirements are.
 
@@ -188,49 +187,38 @@ In my case, the pipeline stops here.  You may have monitoring or other tools or 
 
 Production is the version of the app that my end users interact with. 
 
-* **Git**: The code is in the Prod Repo.
+* **Git**: The code is in the `master` branch.
 * **Realm and Atlas**: Our app is deployed in the Prod Realm App, and our Prod data is in the associated Prod Atlas Project.
 * **Tests**: If we want to run tests, we can use our local machines to execute unit tests against the code in the Prod Repo.
 
 ## Automated Deployments
 
-The code is deployed to Realm using [automated GitHub deployments](https://docs.mongodb.com/realm/deploy/deploy-automatically-with-github/).  Since the automated GitHub deployments currently only deploy from the master branch, we have a separate repo for each stage in the CI/CD pipeline.
+The code is deployed to Realm using [automated GitHub deployments](https://docs.mongodb.com/realm/deploy/deploy-automatically-with-github/). 
 
 ## Travis CI Builds
 
-This project uses Travis CI for builds.  You can view the builds:
-* Lauren's Development Build: https://travis-ci.org/github/ljhaywar/SocialStats-Dev-Lauren
-* Staging: https://travis-ci.org/github/mongodb-developer/SocialStats-Staging
-* Production: https://travis-ci.org/github/mongodb-developer/SocialStats
+This project uses Travis CI for builds.  You can view the builds at https://travis-ci.org/github/mongodb-developer/SocialStats/branches.
 
 The builds are responsible for running the appropriate automated tests and pushing code to the production GitHub repo.  Note that the builds do NOT actually deploy the app.
 See the section above for how the app is deployed.
 
-## GitHub Repos
-
-This projects uses separate repos for each stage in the CI/CD pipeline.  You can view the repos:
-* Lauren's Development Repo: https://github.com/ljhaywar/SocialStats-Dev-Lauren. This repo is a forked copy of the Staging Repo. 
-* Staging Repo: https://github.com/mongodb-developer/SocialStats-Staging. This repo is a mirrored copy of the Production Repo.
-* Production Repo: https://github.com/mongodb-developer/SocialStats.
-
 ### Git Tips
-Since we're doing our work in the master branch of the GitHub repo, things can get a little dicey.  
+Before pushing your changes to your Development Repo, I recommend pulling the latest changes:  `git pull`.
 
-Before pushing your changes to your Development Repo, I recommend pulling the latest changes from the Staging Repo:  `git pull staging master`.
-
-When you want to squash commits in your Development Repo, rebase against staging–not your local copy–so you do not rewrite your Development Repo's history: 
-1. `git pull staging master`
-2. `git rebase -i staging/master`
-
-
+When you want to squash commits in your development branch, rebase against the `staging` branch: 
+1. `git pull`
+2. `git rebase -i staging`
 
 ## Configuring the App
 
 The following steps will walk you through configuring the app for Production, Staging, and Development.
 
-### Steps for All Stages
+1. **Git**
+   1. Fork this repo if you want to create your own version of the app.
+   1. Clone this repo or your forked copy as appropriate.
+   1. Create a branch for your own development work (for example, `dev-lauren`)
 
-Complete the following steps for EACH stage AFTER setting up the Git repos as described in the sections below.
+Then, complete the following steps for Prod (`master` branch), Staging (`staging` branch), and Dev (your development branch you created).  Note that you only need to setup Prod and Staging once per team.  Each team member will need to configure their own development branch.
 
 1. **Atlas**
    1. Create a new [MongoDB Atlas](http://bit.ly/MDB_Atlas) project.
@@ -247,40 +235,17 @@ Complete the following steps for EACH stage AFTER setting up the Git repos as de
    1. Inside of Charts, add a Data Source for your Atlas cluster.
    1. Create a dashboard.
    1. Add the 4 charts as seen in https://charts.mongodb.com/charts-twitter-stats-vzwpx/public/dashboards/82195382-6cea-4994-9283-cf2fb899c6de 
-1. **Configure the App**
-   1. In your code editor, open [/hosting/files/config.js](/hosting/files/config.js). 
-   1. Update the file to reflect the code repos for your app.
-   1. Commit and push the changes.
 1. **Travis CI**
    1. Run the [Travis CI IP Whitelister](https://github.com/mongodb-developer/Travic-CI-IP-Address-Whitelister) so Travis CI can access your database hosted on Atlas.
    1. Add your repo to Travis CI (you may need to sign out and sign back in to see the repo in your list of repos).
    1. Add the variables described in [Project Variables](#project-variables) to your build's Environment Variables.
    1. Disable `build on pushed pull requests` since Realm will not deploy on PRs. If you left this option enabled, your tests would be running against an old deployment.
 
-### Configuring Production
+After you've completed the steps above for **each** stage (Prod, Stage, and Dev), configure the app:
+1. **Configure the App**
+   1. Switch to your development branch. 
+   1. In your code editor, open [/hosting/files/config.js](/hosting/files/config.js). 
+   1. Update the file to reflect the config for your app.
+   1. Commit and push the changes.
+   1. Move the changes to Staging and then to Prod.
 
-Create a new git repo for your production application. You can either grab a copy of this code and push it to your repo or mirror this repo.
-
-Then complete the steps described above in [Steps for All Stages](#steps-for-all-stages).
-
-### Configuring Staging
- 
-   1. Create a new git repo for your staging application. 
-   1. Since you can't create a fork of an app in the same GitHub organization, we will mirror it instead.  Create a local copy of the prod version of the repo.  Then run the following command: 
-   `git push --mirror https://github.com/YourOrg/YourStagingRepo.git`
-   1. Clone the Staging Repo so you can access the repo locally.
-   1. Add a remote for prod:
-    `git remote add prod https://github.com/YourOrg/YourProdRepo.git`
-   1. Now you can push changes to staging.  You can also push changes to prod.
-
-Then complete the steps described above in [Steps for All Stages](#steps-for-all-stages).
-
-### Configuring Development
- 
-   1. Fork the staging application. 
-   1. Optionally rename the forked repo.
-   1. Clone the repo so you can work locally on your machine.
-   1. Add a remote for staging:
-    `git remote add staging https://github.com/YourOrg/YourStagingRepo.git`.
-
-Then complete the steps described above in [Steps for All Stages](#steps-for-all-stages).
