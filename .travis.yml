@@ -14,7 +14,7 @@ script:
 - npm install
 - CHROMEDRIVER_VERSION=LATEST npm install chromedriver
 # Run tests
-- if [ $TRAVIS_REPO_SLUG == "mongodb-developer/SocialStats" ] ; then
+- if [ $TRAVIS_BRANCH == "master" ] ; then
     echo "Production build so only running unit tests, which don't hit the database";
     ./node_modules/.bin/jest --runInBand ./tests/unit/;
   else 
@@ -23,7 +23,10 @@ script:
   fi
 after_success:
 # If the tests pass on Staging, push the commits to Production
-- if [ $TRAVIS_REPO_SLUG == "mongodb-developer/SocialStats-Staging" ] ; then
+- if [ $TRAVIS_BRANCH == "staging" ] ; then
+    git clone https://${GITHUB_TOKEN}@github.com/mongodb-developer/SocialStats.git;
+    cd SocialStats;
     git checkout master;
-    git push https://${GITHUB_TOKEN}@github.com/mongodb-developer/SocialStats.git;
+    git merge origin/staging;
+    git push origin master;
   fi

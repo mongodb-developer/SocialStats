@@ -101,6 +101,7 @@ async function verifyChartText(elementXpath, chartText) {
          if (i == 4) {
             throw error;
          }
+         await refreshChartsDashboard();
       }
       i++;
    }
