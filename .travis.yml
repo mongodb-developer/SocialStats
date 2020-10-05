@@ -14,13 +14,12 @@ script:
 - npm install
 - CHROMEDRIVER_VERSION=LATEST npm install chromedriver
 # Run tests
+# NOTE DISABLING UI TESTS TEMPORARILY WHILE WORKING ON GIT MERGE
 - if [ $TRAVIS_BRANCH == "master" ] ; then
     echo "Production build so only running unit tests, which don't hit the database";
     ./node_modules/.bin/jest --runInBand ./tests/unit/;
   else 
     echo "Non-production build so running all tests. The database will be cleared as part of these tests.";
-    # NOTE DISABLING UI TESTS TEMPORARILY WHILE WORKING ON GIT MERGE
-    #./node_modules/.bin/jest --runInBand;
     ./node_modules/.bin/jest --runInBand ./tests/unit/;
   fi
 after_success:
@@ -29,7 +28,7 @@ after_success:
     git remote -v
     git remote add SocialStats https://${GITHUB_TOKEN}@github.com/mongodb-developer/SocialStats.git;
     git remote -v
-    git checkout SocialStats/master;
+    git checkout master;
     git merge SocialStats/staging;
     git push SocialStats master;
   fi
