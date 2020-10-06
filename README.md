@@ -24,7 +24,10 @@ Table of Contents
 
 If you prefer to learn by video, [check out this recording](https://youtu.be/RlouET0cPsc) of a talk I gave at MongoDB.live in June 2020 entitled "DevOps + MongoDB Serverless = 😍". In the talk, I give a demo of this app and explain how the CI/CD pipeline is configured.
 
-[![DevOps + MongoDB Serverless = 😍 Webinar Screenshot](/images/webinar.png "DevOps + MongoDB Serverless = 😍 Webinar Screenshot")](https://www.mongodb.com/presentations/devops--mongodb-serverless--your-success)
+Note:  At the time of the recording, the GitHub repos were handled differently.  The Realm auto-deployment feature only worked from the master branch, so I had separate repos for Dev, Staging, and Prod.  Since then, the Realm team has updated the auto-deploy feature so you can deploy from any branch in a repo.  Now Dev, Staging, and Prod are stored in their own branches in this repo.  The sections below explain the new way the code is stored in more detail.
+
+[![DevOps + MongoDB Serverless = 😍 Webinar Screenshot](/images/webinar.png "DevOps + MongoDB Serverless = 😍 Webinar Screenshot")](
+If you prefer to learn by video, [check out this recording](https://youtu.be/RlouET0cPsc)
 
 ## App Functionality
 
@@ -135,7 +138,7 @@ Below is a table the highlights what is happening at each stage and between stag
 ### Local
 
 I do my development work locally on my machine.
-* **Git**: I have a local copy of my development branch in the project repo.  The project repo stores everything in my app including my hosted html files and my serverless functions.
+* **Git**: I have a local copy of my development branch in the Git repo.  The Git repo stores everything in my app including my hosted html files and my serverless functions.
 * **Tests**: I can run unit tests that test my serverless functions.  Since I don’t have a way to run Realm locally on my machine, that’s all I can test.  I need to push my code to Realm in order to run manual tests, integration tests, and UI tests.
 
 ### Moving from Local to Development
@@ -237,8 +240,8 @@ Then, complete the following steps for Prod (`master` branch), Staging (`staging
    1. Add the 4 charts as seen in https://charts.mongodb.com/charts-twitter-stats-vzwpx/public/dashboards/82195382-6cea-4994-9283-cf2fb899c6de 
 1. **Travis CI**
    1. Run the [Travis CI IP Whitelister](https://github.com/mongodb-developer/Travic-CI-IP-Address-Whitelister) so Travis CI can access your database hosted on Atlas.
-   1. Add your repo to Travis CI (you may need to sign out and sign back in to see the repo in your list of repos).
-   1. Add the variables described in [Project Variables](#project-variables) to your build's Environment Variables.
+   1. Add your repo to Travis CI (you only need to do this once for the entire repo).  Hint: you may need to sign out and sign back in to see the repo in your list of repos.
+   1. Add the variables described in [Project Variables](#project-variables) to your build's Environment Variables.  Each variable will need to be created for each branch, so make each variable visible only to the appropriate branch.  For example, you will create a `CLUSTER_URI` variable that is only available to the `master` branch, a `CLUSTER_URI` variable that is only available to the `staging` branch, and a `CLUSTER_URI` variable that is only available to your development branch.
    1. Disable `build on pushed pull requests` since Realm will not deploy on PRs. If you left this option enabled, your tests would be running against an old deployment.
 
 After you've completed the steps above for **each** stage (Prod, Stage, and Dev), configure the app:
