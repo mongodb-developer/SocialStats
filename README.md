@@ -26,8 +26,7 @@ If you prefer to learn by video, [check out this recording](https://youtu.be/Rlo
 
 Note:  At the time of the recording, the GitHub repos were handled differently.  The Realm auto-deployment feature only worked from the master branch, so I had separate repos for Dev, Staging, and Prod.  Since then, the Realm team has updated the auto-deploy feature so you can deploy from any branch in a repo.  Now Dev, Staging, and Prod are stored in their own branches in this repo.  The sections below explain the new way the code is stored in more detail.
 
-[![DevOps + MongoDB Serverless = 😍 Webinar Screenshot](/images/webinar.png "DevOps + MongoDB Serverless = 😍 Webinar Screenshot")](
-If you prefer to learn by video, [check out this recording](https://youtu.be/RlouET0cPsc)
+[![DevOps + MongoDB Serverless = 😍 Webinar Screenshot](/images/webinar.png "DevOps + MongoDB Serverless = 😍 Webinar Screenshot")](https://youtu.be/RlouET0cPsc)
 
 ## App Functionality
 
