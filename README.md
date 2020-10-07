@@ -226,7 +226,7 @@ Then, complete the following steps for Prod (`master` branch), Staging (`staging
    1. Create a new [MongoDB Atlas](http://bit.ly/MDB_Atlas) project.
    1. Create a cluster (a free cluster is fine if you are not using the app in production).
    1. Create a database user for your tests. The user should have read and write privileges.
-   1. Whitelist your current IP address.
+   1. Add your current IP address to the IP Access List.
    1. [Create a MongoDB Realm application](https://docs.mongodb.com/realm/procedures/create-realm-app/) in this Atlas project.  Then...
       1. Enable auto deploy.
       1. Enable hosting.
@@ -238,7 +238,7 @@ Then, complete the following steps for Prod (`master` branch), Staging (`staging
    1. Create a dashboard.
    1. Add the 4 charts as seen in https://charts.mongodb.com/charts-twitter-stats-vzwpx/public/dashboards/82195382-6cea-4994-9283-cf2fb899c6de 
 1. **Travis CI**
-   1. Run the [Travis CI IP Whitelister](https://github.com/mongodb-developer/Travic-CI-IP-Address-Whitelister) so Travis CI can access your database hosted on Atlas.
+   1. Run the [Travis CI to Atlas IP Access Lister](https://github.com/mongodb-developer/Travic-CI-to-Atlas-IP-Access-Lister) so Travis CI can access your database hosted on Atlas.
    1. Add your repo to Travis CI (you only need to do this once for the entire repo).  Hint: you may need to sign out and sign back in to see the repo in your list of repos.
    1. Add the variables described in [Project Variables](#project-variables) to your build's Environment Variables.  Each variable will need to be created for each branch, so make each variable visible only to the appropriate branch.  For example, you will create a `CLUSTER_URI` variable that is only available to the `master` branch, a `CLUSTER_URI` variable that is only available to the `staging` branch, and a `CLUSTER_URI` variable that is only available to your development branch.
    1. Disable `build on pushed pull requests` since Realm will not deploy on PRs. If you left this option enabled, your tests would be running against an old deployment.
