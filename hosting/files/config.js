@@ -11,8 +11,8 @@ const CHARTS_URL = getChartsUrl(REALM_APP_ID);
 
 function getChartsUrl(REALM_APP_ID) {
    switch (REALM_APP_ID) {
-      case "twitterstats-vpxim":
-         return "https://charts.mongodb.com/charts-twitter-stats-vzwpx/public/dashboards/82195382-6cea-4994-9283-cf2fb899c6de";
+      case "drgh-hfxea":
+         return "https://charts.mongodb.com/charts-sheeri-jymux/dashboards/b026482b-fc74-4386-96f2-e2b781a17235";
       case "socialstats-staging-pseyi":
          return "https://charts.mongodb.com/charts-socialstats-staging-vkoue/public/dashboards/852be5c1-3476-44b8-9d6f-74bcda18bd03";
       case "socialstats-dev-lauren-ncrqz":
