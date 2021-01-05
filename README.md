@@ -5,6 +5,7 @@ This app allows you to track team stats for social media.
 Table of Contents
 * [Project Goals](#project-goals)
 * [Demo of App and CI/CD Pipeline](#demo-of-app-and-cicd-pipeline)
+* [Related Blog Series](#related-blog-series)
 * [About the Architecture](#about-the-architecture)
 * [Project Variables](#project-variables)
 * [Automated Tests](#automated-tests)
@@ -27,6 +28,14 @@ If you prefer to learn by video, [check out this recording](https://youtu.be/Rlo
 Note:  At the time of the recording, the GitHub repos were handled differently.  The Realm auto-deployment feature only worked from the master branch, so I had separate repos for Dev, Staging, and Prod.  Since then, the Realm team has updated the auto-deploy feature so you can deploy from any branch in a repo.  Now Dev, Staging, and Prod are stored in their own branches in this repo.  The sections below explain the new way the code is stored in more detail.
 
 [![DevOps + MongoDB Serverless = 😍 Webinar Screenshot](/images/webinar.png "DevOps + MongoDB Serverless = 😍 Webinar Screenshot")](https://youtu.be/RlouET0cPsc)
+
+## Related Blog Series
+
+Check out the related blog series about DevOps for Realm Serverless Apps.  More posts coming soon.
+
+* [How to Write Unit Tests for MongoDB Realm Serverless Functions](https://developer.mongodb.com/how-to/unit-test-realm-serverless-functions)
+* [How to Write Integration Tests for MongoDB Realm Serverless Apps](https://developer.mongodb.com/how-to/integration-test-realm-serverless-apps)
+* [How to Write End-to-End Tests for MongoDB Realm Serverless Apps](https://developer.mongodb.com/how-to/end-to-end-test-realm-serverless-apps)
 
 ## App Functionality
 
@@ -76,9 +85,13 @@ The following is a list of variables you should add to config files and your Tra
 
 ## Automated Tests
 
-The app is tested with a combination of automated unit, integration, and ui tests.  All tests are located in the [tests](/tests) directory.
+The app is tested with a combination of automated unit, integration, and ui tests.  For more information about how the tests are architected, check out the following blog posts:
 
-Many of the tests utilize constants from [constants.js](/tests/constants.js).
+* [How to Write Unit Tests for MongoDB Realm Serverless Functions](https://developer.mongodb.com/how-to/unit-test-realm-serverless-functions)
+* [How to Write Integration Tests for MongoDB Realm Serverless Apps](https://developer.mongodb.com/how-to/integration-test-realm-serverless-apps)
+* [How to Write End-to-End Tests for MongoDB Realm Serverless Apps](https://developer.mongodb.com/how-to/end-to-end-test-realm-serverless-apps)
+
+All tests are located in the [tests](/tests) directory.  Many of the tests utilize constants from [constants.js](/tests/constants.js).
 
 ### Local Test Execution
 
@@ -199,7 +212,7 @@ The code is deployed to Realm using [automated GitHub deployments](https://docs.
 
 ## Travis CI Builds
 
-This project uses Travis CI for builds.  You can view the builds at https://travis-ci.org/github/mongodb-developer/SocialStats/branches.
+This project uses Travis CI for builds.  You can view the builds at https://travis-ci.com/github/mongodb-developer/SocialStats/branches.
 
 The builds are responsible for running the appropriate automated tests and pushing code to the production GitHub repo.  Note that the builds do NOT actually deploy the app.
 See the section above for how the app is deployed.
