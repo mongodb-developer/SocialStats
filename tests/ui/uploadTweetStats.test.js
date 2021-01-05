@@ -8,8 +8,8 @@ let collection;
 let mongoClient;
 let driver;
 
-const totalEngagementsXpath = "//*[text()='Total Engagements']";
-const totalImpressionsXpath = "//*[text()='Total Impressions']";
+const totalEngagementsXpath = "//div[@data-test-id='chart']/div/h4[text()='Total Engagements']";
+const totalImpressionsXpath = "//div[@data-test-id='chart']/div/h4[text()='Total Impressions']";
 
 beforeAll(async () => {
    jest.setTimeout(30000);
@@ -119,8 +119,8 @@ async function moveToCanvasOfElement(elementXPath) {
          // Instead we'll hover over the chart and pull the values out of the tooltip.
 
          await driver.wait(until.elementLocated(By.xpath(elementXPath)), 10000);
-         await driver.wait(until.elementLocated(By.xpath(elementXPath + "/parent::*//canvas")), 1000);
-         const canvas = await driver.findElement(By.xpath(elementXPath + "/parent::*//canvas"));
+         await driver.wait(until.elementLocated(By.xpath(elementXPath + "/../..//canvas")), 1000);
+         const canvas = await driver.findElement(By.xpath(elementXPath + "/../..//canvas"));
          const actions = driver.actions();
          await actions.move({ origin: canvas }).perform();
          break;
@@ -134,9 +134,9 @@ async function moveToCanvasOfElement(elementXPath) {
 }
 
 async function refreshChartsDashboard() {
-   const downArrow = await driver.wait(until.elementLocated(By.css("span.Select-arrow-zone")));
-   downArrow.click();
-
-   const refreshButton = await driver.wait(until.elementLocated(By.xpath("//div[text()='Force Refresh']")));
+   const refreshButton = await driver.wait(until.elementLocated(By.xpath("//button[@data-test-id='refresh-entity-btn']")));
    refreshButton.click();
+
+   const forceRefreshButton = await driver.wait(until.elementLocated(By.xpath("//div[text()='Force Refresh All Charts']")));
+   forceRefreshButton.click();
 }
