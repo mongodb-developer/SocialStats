@@ -23,7 +23,7 @@
     "selenium-webdriver": "^4.0.0-alpha.8"
   },
   "devDependencies": {
-    "chromedriver": "^2.26.1",
+    "chromedriver": "^2.46.0",
     "env-cmd": "^10.1.0",
     "jest": "^26.6.3",
     "jest-cli": "^26.6.3",
